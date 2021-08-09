@@ -1,11 +1,8 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.StringJoiner;
+import java.util.*;
 import java.io.CharArrayWriter;
 
 import java.time.LocalDateTime;
+import java.util.stream.Collectors;
 
 public class WordFrequencyGame {
     public String getResult(String sentence){
@@ -20,13 +17,11 @@ public class WordFrequencyGame {
 
             try {
                 //split the input string with 1 to n pieces of spaces
-                String[] arr = sentence.split(BLANK_SPACE);
-
-                List<Input> inputList = new ArrayList<>();
-                for (String s : arr) {
-                    Input input = new Input(s, 1);
-                    inputList.add(input);
-                }
+                String[] splittedSentence = sentence.split(BLANK_SPACE);
+                
+                List<Input> inputList = Arrays.stream(splittedSentence)
+                        .map(word -> new Input(word, 1))
+                        .collect(Collectors.toList());
 
                 //get the map for the next step of sizing the same word
                 Map<String, List<Input>> map =getListMap(inputList);
