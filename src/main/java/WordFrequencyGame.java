@@ -21,22 +21,13 @@ public class WordFrequencyGame {
                 
                 List<Input> wordsMappedWithFrequency = getWordsMappedWithFrequency(splittedSentence);
                 removeDuplicateWordInList(wordsMappedWithFrequency);
+                return appendWordFrequency(wordsMappedWithFrequency);
 
-
-                StringJoiner joiner = new StringJoiner("\n");
-                for (Input w : wordsMappedWithFrequency) {
-                    String s = w.getValue() + " " +w.getWordCount();
-                    joiner.add(s);
-                }
-                return joiner.toString();
             } catch (Exception e) {
-
-
                 return "Calculate Error";
             }
         }
     }
-
 
     private List<Input> getWordsMappedWithFrequency(String[] splittedSentence) {
         return Arrays.stream(splittedSentence)
@@ -49,5 +40,11 @@ public class WordFrequencyGame {
         HashSet<String> wordsHashSet=new HashSet<>();
         wordsMappedWithFrequency
                 .removeIf(e->!wordsHashSet.add(e.getValue()));
+    }
+
+    private String appendWordFrequency(List<Input> wordsMappedWithFrequency) {
+        return wordsMappedWithFrequency.stream()
+                .map(wordInput -> wordInput.getValue() + " " + wordInput.getWordCount())
+                .collect(Collectors.joining("\n"));
     }
 }
