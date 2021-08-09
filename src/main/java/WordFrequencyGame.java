@@ -14,7 +14,7 @@ public class WordFrequencyGame {
         }
         try {
             List<String> splittedSentence = Arrays.asList(sentence.split(BLANK_SPACE));
-            List<Input> wordsMappedWithFrequency = getWordsSortedDescViaFrequency(splittedSentence);
+            List<WordInfo> wordsMappedWithFrequency = getWordsSortedDescViaFrequency(splittedSentence);
             return appendWordFrequency(wordsMappedWithFrequency);
 
         } catch (Exception e) {
@@ -22,17 +22,17 @@ public class WordFrequencyGame {
         }
     }
 
-    private List<Input> getWordsSortedDescViaFrequency(List<String> splittedSentence) {
+    private List<WordInfo> getWordsSortedDescViaFrequency(List<String> splittedSentence) {
         return splittedSentence.stream()
                 .distinct()
-                .map(word -> new Input(word, Collections.frequency(splittedSentence, word)))
+                .map(word -> new WordInfo(word, Collections.frequency(splittedSentence, word)))
                 .sorted((firstWord, secondWord) -> secondWord.getWordCount() - firstWord.getWordCount())
                 .collect(Collectors.toList());
     }
 
-    private String appendWordFrequency(List<Input> wordsMappedWithFrequency) {
+    private String appendWordFrequency(List<WordInfo> wordsMappedWithFrequency) {
         return wordsMappedWithFrequency.stream()
-                .map(wordInput -> wordInput.getValue() + " " + wordInput.getWordCount())
+                .map(wordInfoInput -> wordInfoInput.getValue() + " " + wordInfoInput.getWordCount())
                 .collect(Collectors.joining("\n"));
     }
 }
