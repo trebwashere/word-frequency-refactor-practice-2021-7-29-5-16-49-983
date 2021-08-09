@@ -19,24 +19,12 @@ public class WordFrequencyGame {
                 //split the input string with 1 to n pieces of spaces
                 String[] splittedSentence = sentence.split(BLANK_SPACE);
                 
-                List<Input> inputList = Arrays.stream(splittedSentence)
-                        .map(word -> new Input(word, 1))
-                        .collect(Collectors.toList());
+                List<Input> wordsMappedWithFrequency = getWordsMappedWithFrequency(splittedSentence);
+                removeDuplicateWordInList(wordsMappedWithFrequency);
 
-                //get the map for the next step of sizing the same word
-                Map<String, List<Input>> map =getListMap(inputList);
-
-                List<Input> list = new ArrayList<>();
-                for (Map.Entry<String, List<Input>> entry : map.entrySet()){
-                    Input input = new Input(entry.getKey(), entry.getValue().size());
-                    list.add(input);
-                }
-                inputList = list;
-
-                inputList.sort((w1, w2) -> w2.getWordCount() - w1.getWordCount());
 
                 StringJoiner joiner = new StringJoiner("\n");
-                for (Input w : inputList) {
+                for (Input w : wordsMappedWithFrequency) {
                     String s = w.getValue() + " " +w.getWordCount();
                     joiner.add(s);
                 }
@@ -50,24 +38,16 @@ public class WordFrequencyGame {
     }
 
 
-    private Map<String,List<Input>> getListMap(List<Input> inputList) {
-        Map<String, List<Input>> map = new HashMap<>();
-        for (Input input :  inputList){
-//       map.computeIfAbsent(input.getValue(), k -> new ArrayList<>()).add(input);
-            if (!map.containsKey(input.getValue())){
-                ArrayList arr = new ArrayList<>();
-                arr.add(input);
-                map.put(input.getValue(), arr);
-            }
-
-            else {
-                map.get(input.getValue()).add(input);
-            }
-        }
-
-
-        return map;
+    private List<Input> getWordsMappedWithFrequency(String[] splittedSentence) {
+        return Arrays.stream(splittedSentence)
+                .map(word -> new Input(word, Collections.frequency(Arrays.asList(splittedSentence), word)))
+                .sorted((w1, w2) -> w2.getWordCount() - w1.getWordCount())
+                .collect(Collectors.toList());
     }
 
-
+    private void removeDuplicateWordInList(List<Input> wordsMappedWithFrequency) {
+        HashSet<String> wordsHashSet=new HashSet<>();
+        wordsMappedWithFrequency
+                .removeIf(e->!wordsHashSet.add(e.getValue()));
+    }
 }
