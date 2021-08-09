@@ -1,7 +1,7 @@
-import java.util.*;
-import java.io.CharArrayWriter;
-
-import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class WordFrequencyGame {
@@ -10,36 +10,31 @@ public class WordFrequencyGame {
         final String BLANK_SPACE = "\\s+";
         final String DEFAULT_APPEND = " 1";
 
-
         if (sentence.split(BLANK_SPACE).length==1) {
             return sentence + DEFAULT_APPEND;
-        } else {
+        }
+        try {
+            List<String> splittedSentence = Arrays.asList(sentence.split(BLANK_SPACE));
+            List<Input> wordsMappedWithFrequency = getSorted(splittedSentence);
+            removeDuplicateWordInList(wordsMappedWithFrequency);
+            return appendWordFrequency(wordsMappedWithFrequency);
 
-            try {
-                //split the input string with 1 to n pieces of spaces
-                String[] splittedSentence = sentence.split(BLANK_SPACE);
-                
-                List<Input> wordsMappedWithFrequency = getWordsMappedWithFrequency(splittedSentence);
-                removeDuplicateWordInList(wordsMappedWithFrequency);
-                return appendWordFrequency(wordsMappedWithFrequency);
-
-            } catch (Exception e) {
-                return "Calculate Error";
-            }
+        } catch (Exception e) {
+            return "Calculate Error";
         }
     }
 
-    private List<Input> getWordsMappedWithFrequency(String[] splittedSentence) {
-        return Arrays.stream(splittedSentence)
-                .map(word -> new Input(word, Collections.frequency(Arrays.asList(splittedSentence), word)))
-                .sorted((w1, w2) -> w2.getWordCount() - w1.getWordCount())
+    private List<Input> getSorted(List<String> splittedSentence) {
+        return splittedSentence.stream()
+                .map(word -> new Input(word, Collections.frequency(splittedSentence, word)))
+                .sorted((firstWord, secondWord) -> secondWord.getWordCount() - firstWord.getWordCount())
                 .collect(Collectors.toList());
     }
 
     private void removeDuplicateWordInList(List<Input> wordsMappedWithFrequency) {
-        HashSet<String> wordsHashSet=new HashSet<>();
+        HashSet<String> wordsHashSet = new HashSet<>();
         wordsMappedWithFrequency
-                .removeIf(e->!wordsHashSet.add(e.getValue()));
+                .removeIf(word ->!wordsHashSet.add(word.getValue()));
     }
 
     private String appendWordFrequency(List<Input> wordsMappedWithFrequency) {
