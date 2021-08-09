@@ -11,10 +11,11 @@ public class WordFrequencyGame {
     public String getResult(String sentence){
 
         final String BLANK_SPACE = "\\s+";
+        final String DEFAULT_APPEND = " 1";
 
 
         if (sentence.split(BLANK_SPACE).length==1) {
-            return sentence + " 1";
+            return sentence + DEFAULT_APPEND;
         } else {
 
             try {
